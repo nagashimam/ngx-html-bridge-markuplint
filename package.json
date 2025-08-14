@@ -1,0 +1,21 @@
+{
+	"name": "ngx-html-bridge-markuplint",
+	"version": "0.0.1",
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "tsc",
+		"lint": "biome lint .",
+		"test": "tsx --test tests/**/*.test.ts",
+		"example": "echo \"No example yet\""
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"@biomejs/biome": "^2.1.4",
+		"@types/node": "^24.2.1",
+		"tsx": "^4.20.4",
+		"typescript": "^5.9.2"
+	}
+}
