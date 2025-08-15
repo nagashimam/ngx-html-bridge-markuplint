@@ -1,6 +1,10 @@
 {
 	"name": "ngx-html-bridge-markuplint",
 	"version": "0.0.1",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nagashimam/ngx-html-bridge-markuplint"
+	},
 	"main": "dist/index.js",
 	"scripts": {
 		"build": "tsc",
