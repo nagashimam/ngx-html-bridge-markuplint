@@ -4,7 +4,7 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"build": "tsc",
-		"lint": "biome lint .",
+		"lint": "biome check src --write",
 		"test": "tsx --test tests/**/*.test.ts",
 		"example": "echo \"No example yet\""
 	},
@@ -12,6 +12,10 @@
 	"author": "",
 	"license": "ISC",
 	"description": "",
+	"dependencies": {
+		"markuplint": "^4.13.0",
+		"ngx-html-bridge": "^0.0.11"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.1.4",
 		"@types/node": "^24.2.1",
