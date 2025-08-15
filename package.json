@@ -1,6 +1,6 @@
 {
 	"name": "ngx-html-bridge-markuplint",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/nagashimam/ngx-html-bridge-markuplint"
@@ -18,7 +18,7 @@
 	"description": "",
 	"dependencies": {
 		"markuplint": "^4.13.0",
-		"ngx-html-bridge": "^0.0.11"
+		"ngx-html-bridge": "^0.0.13"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.1.4",
