@@ -1,6 +1,6 @@
 {
 	"name": "ngx-html-bridge-markuplint",
-	"version": "0.0.6",
+	"version": "0.0.8",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/nagashimam/ngx-html-bridge-markuplint"
@@ -10,7 +10,8 @@
 		"build": "tsc",
 		"lint": "biome check src --write",
 		"test": "tsx --test tests/**/*.test.ts",
-		"example": "echo \"No example yet\""
+		"example": "echo \"No example yet\"",
+		"prepublishonly": "npm run build"
 	},
 	"keywords": [],
 	"author": "",
@@ -18,7 +19,7 @@
 	"description": "",
 	"dependencies": {
 		"markuplint": "^4.13.0",
-		"ngx-html-bridge": "^0.0.16"
+		"ngx-html-bridge": "^0.0.18"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.1.4",
