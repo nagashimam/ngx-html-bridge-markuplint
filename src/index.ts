@@ -50,17 +50,22 @@ const run = async (
 			continue;
 		}
 
+		const violations = modifyViolations(result.violations, variation.annotated);
+		if (violations.length === 0) {
+			continue;
+		}
+
 		results.push({
 			filePath: result.filePath,
 			sourceCode: result.sourceCode,
 			fixedCode: result.fixedCode,
 			status: result.status,
-			violations: modifyViolations(result.violations, variation.annotated),
+			violations,
 			variation,
 		});
 	}
 
-	return results;
+	return filterDuplicateViolations(results);
 };
 
 const modifyViolations = (
@@ -125,4 +130,28 @@ const extractOffsetsFromAttributeRaw = (
 		startOffset: rawStartOffset,
 		endOffset: rawEndOffset,
 	};
+};
+
+const filterDuplicateViolations = (results: BridgeMLResultInfo[]) => {
+	const uniqViolationKeys: string[] = [];
+	const filteredResults: BridgeMLResultInfo[] = [];
+
+	for (const result of results) {
+		const uniqViolationsInResult: BridgeMLViolation[] = [];
+		const violations = result.violations;
+		for (const violation of violations) {
+			const { startOffset, endOffset, ruleId } = violation;
+			const key = String({ startOffset, endOffset, ruleId });
+			if (!uniqViolationKeys.includes(key)) {
+				uniqViolationKeys.push(key);
+				uniqViolationsInResult.push(violation);
+			}
+		}
+		if (uniqViolationsInResult.length > 0) {
+			result.violations = uniqViolationsInResult;
+			filteredResults.push(result);
+		}
+	}
+
+	return filteredResults;
 };
