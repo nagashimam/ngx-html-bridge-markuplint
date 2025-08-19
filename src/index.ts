@@ -17,18 +17,18 @@ export type BridgeMLResultInfo = Omit<MLResultInfo, "violations"> & {
 	violations: BridgeMLViolation[];
 } & { variation: HtmlVariation };
 
-export const runMarkuplintAgainstTemplate = (
+export const runMarkuplintAgainstTemplate = async (
 	template: string,
 	templatePath: string,
 ): Promise<BridgeMLResultInfo[]> => {
-	const variations = parseAngularTemplate(template, templatePath);
+	const variations = await parseAngularTemplate(template, templatePath);
 	return run(templatePath, variations);
 };
 
-export const runMarkuplintAgainstTemplateFile = (
+export const runMarkuplintAgainstTemplateFile = async (
 	templatePath: string,
 ): Promise<BridgeMLResultInfo[]> => {
-	const variations = parseAngularTemplateFile(templatePath);
+	const variations = await parseAngularTemplateFile(templatePath);
 	return run(templatePath, variations);
 };
 
