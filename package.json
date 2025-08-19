@@ -19,7 +19,8 @@
 	"description": "",
 	"dependencies": {
 		"markuplint": "^4.13.0",
-		"ngx-html-bridge": "^0.0.19"
+		"ngx-html-bridge": "^0.0.19",
+		"ngx-html-bridge-markuplint": "^0.0.9"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.1.4",
