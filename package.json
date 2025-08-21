@@ -1,31 +1,31 @@
 {
-	"name": "ngx-html-bridge-markuplint",
-	"version": "0.0.13",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/nagashimam/ngx-html-bridge-markuplint"
-	},
-	"main": "dist/index.js",
-	"scripts": {
-		"build": "tsc",
-		"lint": "biome check src --write",
-		"test": "tsx --test tests/**/*.test.ts",
-		"example": "echo \"No example yet\"",
-		"prepublishonly": "npm run build"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"description": "",
-	"dependencies": {
-		"markuplint": "^4.13.0",
-		"ngx-html-bridge": "^0.0.19",
-		"ngx-html-bridge-markuplint": "^0.0.9"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.1.4",
-		"@types/node": "^24.2.1",
-		"tsx": "^4.20.4",
-		"typescript": "^5.9.2"
-	}
+  "name": "ngx-html-bridge-markuplint",
+  "version": "0.0.13",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nagashimam/ngx-html-bridge-markuplint"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "biome check src --write",
+    "test": "tsx --test tests/**/*.test.ts",
+    "example": "echo \"No example yet\"",
+    "prepublishonly": "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "markuplint": "^4.13.0",
+    "ngx-html-bridge": "^0.0.19"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.1.4",
+    "@types/node": "^24.2.1",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
+  }
 }
