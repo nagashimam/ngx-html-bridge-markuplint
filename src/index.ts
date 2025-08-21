@@ -140,8 +140,8 @@ const filterDuplicateViolations = (results: BridgeMLResultInfo[]) => {
 		const uniqViolationsInResult: BridgeMLViolation[] = [];
 		const violations = result.violations;
 		for (const violation of violations) {
-			const { startOffset, endOffset, ruleId } = violation;
-			const key = String({ startOffset, endOffset, ruleId });
+			const { startOffset, endOffset, message } = violation;
+			const key = JSON.stringify({ startOffset, endOffset, message });
 			if (!uniqViolationKeys.includes(key)) {
 				uniqViolationKeys.push(key);
 				uniqViolationsInResult.push(violation);
