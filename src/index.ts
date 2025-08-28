@@ -18,6 +18,8 @@ export type BridgeMLResultInfo = Omit<MLResultInfo, "violations"> & {
 	violations: BridgeMLViolation[];
 } & { variation: HtmlVariation };
 
+export { BridgeOption } from "ngx-html-bridge";
+
 export const runMarkuplintAgainstTemplate = async (
 	template: string,
 	templatePath: string,
