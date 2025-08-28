@@ -5,6 +5,7 @@ import {
 	parseAngularTemplate,
 	parseAngularTemplateFile,
 } from "ngx-html-bridge";
+import type { BridgeOption } from "ngx-html-bridge";
 
 interface Offset {
 	startOffset: number;
@@ -20,15 +21,17 @@ export type BridgeMLResultInfo = Omit<MLResultInfo, "violations"> & {
 export const runMarkuplintAgainstTemplate = async (
 	template: string,
 	templatePath: string,
+	option: BridgeOption,
 ): Promise<BridgeMLResultInfo[]> => {
-	const variations = await parseAngularTemplate(template, templatePath);
+	const variations = await parseAngularTemplate(template, templatePath, option);
 	return run(templatePath, variations);
 };
 
 export const runMarkuplintAgainstTemplateFile = async (
 	templatePath: string,
+	option: BridgeOption,
 ): Promise<BridgeMLResultInfo[]> => {
-	const variations = await parseAngularTemplateFile(templatePath);
+	const variations = await parseAngularTemplateFile(templatePath, option);
 	return run(templatePath, variations);
 };
 
