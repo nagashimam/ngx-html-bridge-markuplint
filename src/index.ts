@@ -6,6 +6,7 @@ import {
 	parseAngularTemplateFile,
 } from "ngx-html-bridge";
 import type { BridgeOption } from "ngx-html-bridge";
+import { MLEngine } from "markuplint";
 
 interface Offset {
 	startOffset: number;
@@ -42,7 +43,6 @@ const run = async (
 	variations: HtmlVariation[],
 ): Promise<BridgeMLResultInfo[]> => {
 	const results: BridgeMLResultInfo[] = [];
-	const { MLEngine } = await import("markuplint");
 
 	for (const variation of variations) {
 		const engine = await MLEngine.fromCode(variation.annotated, {
