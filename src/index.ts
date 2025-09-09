@@ -1,12 +1,12 @@
-import * as path from "node:path";
 import type { MLResultInfo } from "markuplint";
+import type { BridgeOption } from "ngx-html-bridge";
 import {
 	type HtmlVariation,
 	parseAngularTemplate,
 	parseAngularTemplateFile,
 } from "ngx-html-bridge";
-import type { BridgeOption } from "ngx-html-bridge";
-import { MLEngine } from "markuplint";
+import { run } from "./run.js";
+import { runParallelly } from "./run-parallelly.js";
 
 interface Offset {
 	startOffset: number;
@@ -27,7 +27,7 @@ export const runMarkuplintAgainstTemplate = async (
 	option: BridgeOption,
 ): Promise<BridgeMLResultInfo[]> => {
 	const variations = await parseAngularTemplate(template, templatePath, option);
-	return run(templatePath, variations);
+	return runAll(templatePath, variations);
 };
 
 export const runMarkuplintAgainstTemplateFile = async (
@@ -35,106 +35,29 @@ export const runMarkuplintAgainstTemplateFile = async (
 	option: BridgeOption,
 ): Promise<BridgeMLResultInfo[]> => {
 	const variations = await parseAngularTemplateFile(templatePath, option);
-	return run(templatePath, variations);
+	return runAll(templatePath, variations);
 };
 
-const run = async (
+const runAll = async (
 	templatePath: string,
 	variations: HtmlVariation[],
 ): Promise<BridgeMLResultInfo[]> => {
 	const results: BridgeMLResultInfo[] = [];
 
-	for (const variation of variations) {
-		const engine = await MLEngine.fromCode(variation.annotated, {
-			name: path.basename(templatePath),
-			dirname: path.dirname(templatePath),
-		});
-		const result = await engine.exec();
-
-		if (result === null) {
-			continue;
+	// if the number of variations is small, overhead for launching workers will be more than the benefits of parallel execution
+	if (variations.length < 128) {
+		for (const variation of variations) {
+			const result = await run(templatePath, variation);
+			if (result) {
+				results.push(result);
+			}
 		}
-
-		const violations = modifyViolations(result.violations, variation.annotated);
-		if (violations.length === 0) {
-			continue;
-		}
-
-		results.push({
-			filePath: result.filePath,
-			sourceCode: result.sourceCode,
-			fixedCode: result.fixedCode,
-			status: result.status,
-			violations,
-			variation,
-		});
+	} else {
+		const resultsWithNull = await runParallelly(templatePath, variations);
+		results.push(...resultsWithNull.filter((result) => !!result));
 	}
 
 	return filterDuplicateViolations(results);
-};
-
-const modifyViolations = (
-	violations: readonly Violation[],
-	html: string,
-): BridgeMLViolation[] =>
-	violations.map((violation) => {
-		const offset = extractOffsetsFromHTMLRaw(violation.raw) ||
-			extractOffsetsFromAttributeRaw(html, violation) || {
-				startOffset: 0,
-				endOffset: 0,
-			};
-
-		const { startOffset, endOffset } = offset;
-		return {
-			...violation,
-			startOffset,
-			endOffset,
-		};
-	});
-
-const extractOffsetsFromHTMLRaw = (
-	raw: string,
-): { startOffset: number; endOffset: number } | null => {
-	const regex =
-		/data-ngx-html-bridge-start-offset="(\d+)"\s+data-ngx-html-bridge-end-offset="(\d+)"/;
-	const match = raw.match(regex);
-
-	if (match) {
-		const startOffset = Number.parseInt(match[1], 10);
-		const endOffset = Number.parseInt(match[2], 10);
-		return { startOffset, endOffset };
-	}
-
-	return null;
-};
-
-const extractOffsetsFromAttributeRaw = (
-	html: string,
-	violation: Violation,
-): { startOffset: number; endOffset: number } | null => {
-	const { raw, col } = violation;
-	const rawIndex = html.indexOf(raw);
-	if (rawIndex === -1) {
-		return null;
-	}
-
-	const htmlBeforeRaw = html.substring(0, col - 1);
-	const attributeName = raw.split("=")[0].trim();
-	const startOffsetAttr = `data-ngx-html-bridge-${attributeName}-start-offset`;
-	const endOffsetAttr = `data-ngx-html-bridge-${attributeName}-end-offset`;
-
-	const rawOffsetRegex = new RegExp(
-		`.*${startOffsetAttr}="(\\d+)" ${endOffsetAttr}="(\\d+)"`,
-	);
-	const match = htmlBeforeRaw.match(rawOffsetRegex);
-
-	const rawStartOffset = match ? Number.parseInt(match[1], 10) : 0;
-	const rawEndOffset = match ? Number.parseInt(match[2], 10) : 0;
-
-	return {
-		startOffset: rawStartOffset,
-		endOffset: rawEndOffset,
-	};
 };
 
 const filterDuplicateViolations = (results: BridgeMLResultInfo[]) => {
