@@ -1,3 +1,5 @@
 node_modules
 prompt-draft.txt
 dist
+.gemini
+.serena
