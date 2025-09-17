@@ -24,7 +24,10 @@ export { BridgeOption } from "ngx-html-bridge";
 export const runMarkuplintAgainstTemplate = async (
 	template: string,
 	templatePath: string,
-	option: BridgeOption,
+	option: BridgeOption = {
+		includedAttributes: [],
+		nonEmptyItems: [],
+	},
 ): Promise<BridgeMLResultInfo[]> => {
 	const variations = await parseAngularTemplate(template, templatePath, option);
 	return runAll(templatePath, variations);
@@ -32,7 +35,10 @@ export const runMarkuplintAgainstTemplate = async (
 
 export const runMarkuplintAgainstTemplateFile = async (
 	templatePath: string,
-	option: BridgeOption,
+	option: BridgeOption = {
+		includedAttributes: [],
+		nonEmptyItems: [],
+	},
 ): Promise<BridgeMLResultInfo[]> => {
 	const variations = await parseAngularTemplateFile(templatePath, option);
 	return runAll(templatePath, variations);
